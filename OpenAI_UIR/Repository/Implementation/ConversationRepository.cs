@@ -14,12 +14,17 @@ namespace OpenAI_UIR.Repository.Implementation
         {
             _db = db;
         }
+        public async Task<List<Conversation>> GetAllConversationsAsync()
+        {
+            return await _db.Conversations.Include(c => c.Questions).ThenInclude(q => q.Answer).ToListAsync();
+        }
         public async Task<Conversation> CreateConversationAsync(Conversation conversation)
         {
             await _db.Conversations.AddAsync(conversation);
             _db.SaveChanges();
             return conversation;
         }
+
 
         public async Task<Conversation> GetConversationAsync(Guid id)
         {
