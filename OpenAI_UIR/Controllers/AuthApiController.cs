@@ -34,5 +34,13 @@ namespace OpenAI_UIR.Controllers
             _response.Result = loginResponse;
             return _response;
         }
+        [HttpPost("logout")]
+        public ActionResult<APIResponse> logout()
+        {
+            _response.CodeStatus = HttpStatusCode.OK;
+            _response.IsSuccess = true;
+            _response.Result = new LogoutResponseDto { Message = "Logout successful" };
+            return _response;
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace OpenAI_UIR.Services
                     // User messages represent current or historical input from the end user
                     new ChatRequestUserMessage("Can you help me?"),
                     // Assistant messages represent historical responses from the assistant
-                    new ChatRequestAssistantMessage("Arrrr! Of course, me hearty! What can I do for ye?"),
+                    new ChatRequestAssistantMessage(""),
                     new ChatRequestUserMessage(question), // User's message
                 }
             };
