@@ -9,15 +9,16 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using System.Data.SqlTypes;
 using AutoMapper;
+using OpenAI_UIR.Models;
 
 namespace OpenAI_UIR.Repository.Implementation
 {
-    public class AdminRepository : IAdminRepository
+    public class AdminRepository : Repository<Admin> , IAdminRepository
     {
         private readonly AppDbContext _db;
         private string secretKey;
         private readonly IMapper _mapper;
-        public AdminRepository(AppDbContext db, IConfiguration configuration,IMapper mapper)
+        public AdminRepository(AppDbContext db, IConfiguration configuration,IMapper mapper):base(db)
         {
             _db = db;
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");

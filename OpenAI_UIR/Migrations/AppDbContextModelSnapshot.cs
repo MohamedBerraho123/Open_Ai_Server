@@ -42,7 +42,7 @@ namespace OpenAI_UIR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admins");
+                    b.ToTable("Admins", (string)null);
 
                     b.HasData(
                         new
@@ -76,7 +76,7 @@ namespace OpenAI_UIR.Migrations
                     b.HasIndex("QuestionId")
                         .IsUnique();
 
-                    b.ToTable("Answers");
+                    b.ToTable("Answers", (string)null);
                 });
 
             modelBuilder.Entity("OpenAI_UIR.Models.Conversation", b =>
@@ -90,7 +90,7 @@ namespace OpenAI_UIR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conversations");
+                    b.ToTable("Conversations", (string)null);
                 });
 
             modelBuilder.Entity("OpenAI_UIR.Models.Question", b =>
@@ -113,7 +113,7 @@ namespace OpenAI_UIR.Migrations
 
                     b.HasIndex("ConversationId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("OpenAI_UIR.Models.Answer", b =>

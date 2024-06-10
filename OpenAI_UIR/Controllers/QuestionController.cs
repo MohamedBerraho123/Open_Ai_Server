@@ -45,7 +45,7 @@ namespace OpenAI_UIR.Controllers
                     Id = conversationId,
                     CreatedAt = DateTime.UtcNow,
                 };
-                await _crepo.CreateConversationAsync(conversation);
+                await _crepo.CreateAsync(conversation);
             }
             else
             {
@@ -58,30 +58,28 @@ namespace OpenAI_UIR.Controllers
                     return _response;
                 }
             }
-            Question question = new Question
-            {
-                Id = Guid.NewGuid(),
-                QuestionContent = questionDto.Question,
-                CreatedAt = DateTime.UtcNow,
-                ConversationId = conversation.Id,
-            };
-            await _qrepo.CreateQuestionAsync(question);
-            string response = await _openAI.GetAnswerAsync(question.QuestionContent , questionDto.Language);
-            Answer answer = new Answer
+            var previousAnswer = await _arepo.GetLastAnswerForConversationAsync(conversationId);
+            var previousAnswerContent = previousAnswer?.AnswerContent ?? string.Empty;
+            Question question = new Question{};
+            question.Id = Guid.NewGuid();
+            question.QuestionContent = questionDto.Question;
+            question.CreatedAt = DateTime.UtcNow;
+            question.ConversationId = conversation.Id;
+            string response = await _openAI.GetAnswerAsync(question.QuestionContent , questionDto.Language , previousAnswerContent);
+            question.Answer = new Answer
             {
                 Id = Guid.NewGuid(),
                 AnswerContent = response,
                 QuestionId = question.Id,
                 CreatedAt = DateTime.UtcNow,
             };
-            await _arepo.CreateAnswerAsync(answer);
+            await _qrepo.CreateAsync(question);
             _response.CodeStatus = HttpStatusCode.OK;
             _response.IsSuccess = true;
             _response.ErrorMessages.Add("Question and answer created successfully.");
             _response.Result = new
             {
                 Question = question,
-                Answer = answer,
                 ConversationId = conversation.Id
             };
             return _response;

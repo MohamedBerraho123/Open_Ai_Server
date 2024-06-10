@@ -4,8 +4,8 @@ using OpenAI_UIR.Models;
 
 namespace OpenAI_UIR.Repository.Abstract
 {
-    public interface IQuestionRepository
+    public interface IQuestionRepository : IRepository<Question>
     {
-        Task<Question> CreateQuestionAsync(Question question);
+        
     }
 }
