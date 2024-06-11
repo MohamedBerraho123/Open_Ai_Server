@@ -24,6 +24,7 @@ namespace OpenAI_UIR.Db
             .WithOne(q => q.Conversation)
             .HasForeignKey(q => q.ConversationId)
             .OnDelete(DeleteBehavior.Cascade);
+            // Conversation and User
             modelBuilder.Entity<Conversation>()
                 .HasOne(c=>c.User)
                 .WithMany(u=>u.Conversation)

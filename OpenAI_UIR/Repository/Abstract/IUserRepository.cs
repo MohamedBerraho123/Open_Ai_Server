@@ -5,6 +5,6 @@ namespace OpenAI_UIR.Repository.Abstract
 {
     public interface IUserRepository : IRepository<User>
     {
-        Task<IActionResult> GetAuthenticatedUserAsync();
+        Task<User> GetAuthenticatedUserAsync(string userId);
     }
 }
