@@ -12,6 +12,6 @@ namespace OpenAI_UIR.Controllers
         {
             
         }
-        public IActionResult GetCurrentUser
+        
     }
 }

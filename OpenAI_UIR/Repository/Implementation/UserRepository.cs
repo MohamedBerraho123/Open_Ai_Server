@@ -6,7 +6,7 @@ using OpenAI_UIR.Repository.Abstract;
 
 namespace OpenAI_UIR.Repository.Implementation
 {
-    public class UserRepository : Repository<User> ,IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
         private readonly AppDbContext _db;
         public UserRepository(AppDbContext db) : base(db)
@@ -16,7 +16,7 @@ namespace OpenAI_UIR.Repository.Implementation
 
         public Task<IActionResult> GetAuthenticatedUserAsync()
         {
-            
+            throw new NotImplementedException();
         }
     }
 }
