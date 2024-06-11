@@ -6,20 +6,12 @@ using OpenAI_UIR.Repository.Abstract;
 
 namespace OpenAI_UIR.Repository.Implementation
 {
-    public class QuestionRepository : IQuestionRepository
+    public class QuestionRepository : Repository<Question> , IQuestionRepository
     {
         private readonly AppDbContext _db;
-        public QuestionRepository(AppDbContext db)
+        public QuestionRepository(AppDbContext db):base(db)
         {
             _db = db;
-        }
-        public async Task<Question> CreateQuestionAsync(Question question)
-        {
-            await _db.Questions.AddAsync(question);
-            await _db.SaveChangesAsync();
-            return question;
-        }
-
-        
+        } 
     }
 }

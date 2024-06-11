@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenAI_UIR.Db;
 
@@ -11,9 +12,11 @@ using OpenAI_UIR.Db;
 namespace OpenAI_UIR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611000719_MigrateUser")]
+    partial class MigrateUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +183,7 @@ namespace OpenAI_UIR.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d1d58ddc-6a84-490a-97d1-874e54a414a5"),
+                            Id = new Guid("bcf486ca-e20c-4995-b9a4-0fb98ac685ca"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Jobintech",
                             Password = "@Jobintech2024@",
@@ -296,6 +299,10 @@ namespace OpenAI_UIR.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

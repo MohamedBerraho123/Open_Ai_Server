@@ -7,20 +7,22 @@ using OpenAI_UIR.Repository.Abstract;
 
 namespace OpenAI_UIR.Repository.Implementation
 {
-    public class ConversationRepository : IConversationRepository
+    public class ConversationRepository : Repository<Conversation> , IConversationRepository
     {
         private readonly AppDbContext _db;
-        public ConversationRepository(AppDbContext db)
+        public ConversationRepository(AppDbContext db):base(db)
         {
             _db = db;
         }
-        public async Task<Conversation> CreateConversationAsync(Conversation conversation)
+        public async Task<List<Conversation>> GetAllConversationsAsync()
         {
-            await _db.Conversations.AddAsync(conversation);
-            _db.SaveChanges();
-            return conversation;
+            var conversations = await _db.Conversations.Include(c => c.Questions).ThenInclude(q => q.Answer).OrderBy(c => c.CreatedAt).ToListAsync();
+            foreach (var conversation in conversations)
+            {
+                conversation.Questions = conversation.Questions.OrderBy(q => q.CreatedAt).ToList();
+            }
+            return conversations;
         }
-
         public async Task<Conversation> GetConversationAsync(Guid id)
         {
             return await _db.Conversations.Include(c=>c.Questions).ThenInclude(q => q.Answer).FirstOrDefaultAsync(c => c.Id == id);

@@ -2,8 +2,8 @@
 
 namespace OpenAI_UIR.Repository.Abstract
 {
-    public interface IAnswerRepository
+    public interface IAnswerRepository : IRepository<Answer>
     {
-        Task<Answer> CreateAnswerAsync(Answer answer);
+        Task<Answer> GetLastAnswerForConversationAsync(Guid conversationId);
     }
 }
