@@ -61,14 +61,13 @@ namespace OpenAI_UIR.Controllers
                     return _response;
                 }
             }
-            var previousAnswer = await _arepo.GetLastAnswerForConversationAsync(conversationId);
-            var previousAnswerContent = previousAnswer?.AnswerContent ?? string.Empty;
+            var questions = await _qrepo.GetAllQuestionsAsync(conversationId);
             Question question = new Question{};
             question.Id = Guid.NewGuid();
             question.QuestionContent = questionDto.Question;
             question.CreatedAt = DateTime.UtcNow;
             question.ConversationId = conversation.Id;
-            string response = await _openAI.GetAnswerAsync(question.QuestionContent , questionDto.Language , previousAnswerContent);
+            string response = await _openAI.GetAnswerAsync(question.QuestionContent , questionDto.Language , questions);
             question.Answer = new Answer
             {
                 Id = Guid.NewGuid(),
@@ -120,14 +119,13 @@ namespace OpenAI_UIR.Controllers
                     return _response;
                 }
             }
-            var previousAnswer = await _arepo.GetLastAnswerForConversationAsync(conversationId);
-            var previousAnswerContent = previousAnswer?.AnswerContent ?? string.Empty;
+            var questions = await _qrepo.GetAllQuestionsAsync(conversationId);
             Question question = new Question { };
             question.Id = Guid.NewGuid();
             question.QuestionContent = questionDto.Question;
             question.CreatedAt = DateTime.UtcNow;
             question.ConversationId = conversation.Id;
-            string response = await _openAI.GetAnswerAsync(question.QuestionContent, questionDto.Language, previousAnswerContent);
+            string response = await _openAI.GetAnswerAsync(question.QuestionContent, questionDto.Language, questions);
             question.Answer = new Answer
             {
                 Id = Guid.NewGuid(),

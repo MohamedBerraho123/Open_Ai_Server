@@ -6,6 +6,6 @@ namespace OpenAI_UIR.Repository.Abstract
 {
     public interface IQuestionRepository : IRepository<Question>
     {
-        
+        Task<List<Question>> GetAllQuestionsAsync(Guid conversationId);
     }
 }
