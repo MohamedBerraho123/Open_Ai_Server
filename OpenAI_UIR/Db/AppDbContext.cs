@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OpenAI_UIR.Models;
 
 namespace OpenAI_UIR.Db
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options):base(options){}
         public DbSet<Admin> Admins { get; set; }
@@ -18,10 +19,15 @@ namespace OpenAI_UIR.Db
                 .WithOne(q => q.Question)
                 .HasForeignKey<Answer>(q => q.QuestionId);
             // Question and Conversation
-            modelBuilder.Entity<Question>()
-                .HasOne(q=>q.Conversation)
-                .WithMany(c=>c.Questions)
-                .HasForeignKey(q=>q.ConversationId);
+            modelBuilder.Entity<Conversation>()
+            .HasMany(c => c.Questions)
+            .WithOne(q => q.Conversation)
+            .HasForeignKey(q => q.ConversationId)
+            .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c=>c.User)
+                .WithMany(u=>u.Conversation)
+                .HasForeignKey(c=>c.UserId);
 
             modelBuilder.Entity<Admin>().HasData(
                     new Admin()

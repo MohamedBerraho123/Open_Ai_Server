@@ -27,7 +27,7 @@ namespace OpenAI_UIR.Controllers
             _response = new();
         }
         [HttpPost]
-        public async Task<ActionResult<APIResponse>> CreateQuestion([FromBody] QuestionDto questionDto) {
+        public async Task<ActionResult<APIResponse>> CreateQuestion([FromBody] CreateDto questionDto) {
             if (questionDto == null || string.IsNullOrEmpty(questionDto.Question))
             {
                 _response.CodeStatus = HttpStatusCode.BadRequest;
@@ -44,6 +44,7 @@ namespace OpenAI_UIR.Controllers
                 {
                     Id = conversationId,
                     CreatedAt = DateTime.UtcNow,
+                    UserId = questionDto.UserId
                 };
                 await _crepo.CreateAsync(conversation);
             }

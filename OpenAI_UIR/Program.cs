@@ -1,6 +1,10 @@
+using System.Security.Claims;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using OpenAI_UIR.Db;
 using OpenAI_UIR.Mapper;
+using OpenAI_UIR.Models;
 using OpenAI_UIR.Repository.Abstract;
 using OpenAI_UIR.Repository.Implementation;
 using OpenAI_UIR.Services;
@@ -17,6 +21,9 @@ builder.Services.AddScoped<IAnswerRepository,AnswerRepository>();
 builder.Services.AddScoped<OpenAIService>();
 //
 builder.Services.AddAutoMapper(typeof(MapperConfig));
+// add authorization
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<AppDbContext>();
 //
 builder.Services.AddCors(options =>
 {
@@ -29,6 +36,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+//
+builder.Services.Configure<JsonSerializerOptions>(options =>
+{
+    options.ReferenceHandler = ReferenceHandler.Preserve;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
@@ -38,6 +50,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.MapGet("user/me",async(ClaimsPrincipal claims,AppDbContext db) =>
+{
+    string userId = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+    return await db.Users.Include(u => u.Conversation).ThenInclude(c => c.Questions).ThenInclude(q => q.Answer).FirstOrDefaultAsync(u => u.Id == userId);
+}).RequireAuthorization();
+app.MapIdentityApi<User>();
 app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseAuthorization();
