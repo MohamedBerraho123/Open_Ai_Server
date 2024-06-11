@@ -14,9 +14,9 @@ namespace OpenAI_UIR.Repository.Implementation
         {
             _db = db;
         }
-        public async Task<List<Conversation>> GetAllConversationsAsync()
+        public async Task<List<ConversationUser>> GetAllConversationsAsync(string userId)
         {
-            var conversations = await _db.Conversations.Include(c => c.Questions).ThenInclude(q => q.Answer).OrderBy(c => c.CreatedAt).ToListAsync();
+            var conversations = await _db.ConversationUsers.Where(c => c.UserId == userId).Include(c => c.Questions).ThenInclude(q => q.Answer).OrderBy(c => c.CreatedAt).ToListAsync();
             foreach (var conversation in conversations)
             {
                 conversation.Questions = conversation.Questions.OrderBy(q => q.CreatedAt).ToList();

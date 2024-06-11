@@ -16,14 +16,14 @@ namespace OpenAI_UIR.Controllers
             _crepo = conversationRepository;
             _response = new();
         }
-        [HttpGet]
-        public async Task<ActionResult<APIResponse>> GetAllConversationsAsync()
-        {
-            _response.CodeStatus = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-            _response.Result = await  _crepo.GetAllConversationsAsync();
-            return _response;
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<APIResponse>> GetAllConversationsAsync()
+        //{
+        //    _response.CodeStatus = HttpStatusCode.OK;
+        //    _response.IsSuccess = true;
+        //    _response.Result = await  _crepo.GetAllConversationsAsync();
+        //    return _response;
+        //}
         [HttpGet("id")]
         public async Task<ActionResult<APIResponse>> GetConversationAsync(string id)
         {

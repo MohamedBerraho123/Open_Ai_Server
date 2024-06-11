@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenAI_UIR.Db;
 
@@ -11,9 +12,11 @@ using OpenAI_UIR.Db;
 namespace OpenAI_UIR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611195634_UpdateMigration")]
+    partial class UpdateMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +183,7 @@ namespace OpenAI_UIR.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("83ed82a5-e915-40c3-a920-312f30eb6f5c"),
+                            Id = new Guid("88d0b2cd-c363-471b-8e72-e7bfd153fc70"),
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Jobintech",
                             Password = "@Jobintech2024@",
@@ -221,18 +224,15 @@ namespace OpenAI_UIR.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("conversation_type")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Conversations");
-
-                    b.HasDiscriminator<string>("conversation_type").HasValue("Conversation");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("OpenAI_UIR.Models.Question", b =>
@@ -278,11 +278,9 @@ namespace OpenAI_UIR.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -329,26 +327,6 @@ namespace OpenAI_UIR.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("OpenAI_UIR.Models.ConversationAnonymous", b =>
-                {
-                    b.HasBaseType("OpenAI_UIR.Models.Conversation");
-
-                    b.HasDiscriminator().HasValue("anonymous");
-                });
-
-            modelBuilder.Entity("OpenAI_UIR.Models.ConversationUser", b =>
-                {
-                    b.HasBaseType("OpenAI_UIR.Models.Conversation");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasIndex("UserId");
-
-                    b.HasDiscriminator().HasValue("user");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -413,6 +391,17 @@ namespace OpenAI_UIR.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("OpenAI_UIR.Models.Conversation", b =>
+                {
+                    b.HasOne("OpenAI_UIR.Models.User", "User")
+                        .WithMany("Conversation")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("OpenAI_UIR.Models.Question", b =>
                 {
                     b.HasOne("OpenAI_UIR.Models.Conversation", "Conversation")
@@ -421,17 +410,6 @@ namespace OpenAI_UIR.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Conversation");
-                });
-
-            modelBuilder.Entity("OpenAI_UIR.Models.ConversationUser", b =>
-                {
-                    b.HasOne("OpenAI_UIR.Models.User", "User")
-                        .WithMany("Conversations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OpenAI_UIR.Models.Conversation", b =>
@@ -446,7 +424,7 @@ namespace OpenAI_UIR.Migrations
 
             modelBuilder.Entity("OpenAI_UIR.Models.User", b =>
                 {
-                    b.Navigation("Conversations");
+                    b.Navigation("Conversation");
                 });
 #pragma warning restore 612, 618
         }

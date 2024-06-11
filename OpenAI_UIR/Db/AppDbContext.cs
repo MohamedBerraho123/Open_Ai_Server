@@ -11,8 +11,14 @@ namespace OpenAI_UIR.Db
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<ConversationUser> ConversationUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //
+            modelBuilder.Entity<Conversation>()
+                .HasDiscriminator<string>("conversation_type")
+                .HasValue<ConversationUser>("user")
+                .HasValue<ConversationAnonymous>("anonymous");
             // Question and Answer
             modelBuilder.Entity<Question>()
                 .HasOne(q => q.Answer)
@@ -25,9 +31,9 @@ namespace OpenAI_UIR.Db
             .HasForeignKey(q => q.ConversationId)
             .OnDelete(DeleteBehavior.Cascade);
             // Conversation and User
-            modelBuilder.Entity<Conversation>()
+            modelBuilder.Entity<ConversationUser>()
                 .HasOne(c=>c.User)
-                .WithMany(u=>u.Conversation)
+                .WithMany(u=>u.Conversations)
                 .HasForeignKey(c=>c.UserId);
 
             modelBuilder.Entity<Admin>().HasData(

@@ -9,6 +9,10 @@ namespace OpenAI_UIR.Mapper
         public MapperConfig()
         {
             CreateMap<Admin,AdminDto>().ReverseMap();
+            CreateMap<User,UserDto>().ReverseMap();
+            CreateMap<Question,QuestionDto>().ReverseMap();
+            CreateMap<Answer,AnswerDto>().ReverseMap();
+            CreateMap<ConversationUser,ConversationUserDto>().ReverseMap();
         }
     }
 }
