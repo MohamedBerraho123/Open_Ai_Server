@@ -52,7 +52,7 @@ if (app.Environment.IsDevelopment())
 }
 app.MapGet("user/me",async(ClaimsPrincipal claims,AppDbContext db) =>
 {
-    string userId = claims.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+   
     return await db.Users.Include(u => u.Conversation).ThenInclude(c => c.Questions).ThenInclude(q => q.Answer).FirstOrDefaultAsync(u => u.Id == userId);
 }).RequireAuthorization();
 app.MapIdentityApi<User>();
